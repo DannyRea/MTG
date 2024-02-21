@@ -1,6 +1,6 @@
-# React + Vite
+# Magic: The Gathering Deck Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A WIP full-stack application that allows a user to build and organize decks based on play style and rules.
 
 Currently, two official plugins are available:
 
