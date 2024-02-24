@@ -1,0 +1,10 @@
+import { makeAutoObservable } from "mobx";
+
+class ViewStore {
+  constructor(rootStore) {
+    this.rootStore = rootStore;
+    makeAutoObservable(this, {
+      rootStore: false,
+    });
+  }
+}

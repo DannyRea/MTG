@@ -22,8 +22,6 @@ const routes = [
           cardStore: { refresh },
         },
       } = routerStore.options;
-
-      return Promise.reject(await routerStore.goTo("LoginPage"));
     },
     onEnter: async (fromState, toState, routerStore) => {
       const {

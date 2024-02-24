@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { action, computed, makeObservable, observable } from "mobx";
 import { observer, inject } from "mobx-react";
+import LoginBodyContainer from "../../components/LoginBody.Container";
 class LoginCreateUserBody extends PureComponent {
   user = { firstName: "", lastName: "", username: "", password: "" };
   passwordAgain = "";
@@ -51,76 +52,60 @@ class LoginCreateUserBody extends PureComponent {
     } = this.props;
     return (
       <>
-        <Grid
-          container
-          spacing={0}
-          style={{
-            minHeight: "100vh",
-            flexDirection: "column",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Card raised>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <CardContent sx={{ flex: "1 0 auto" }}>
-                <div>
-                  <TextField
-                    label="First Name"
-                    name="firstName"
-                    variant="standard"
-                    onChange={this.handleUser}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    label="Last Name"
-                    name="lastName"
-                    variant="standard"
-                    onChange={this.handleUser}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    label="Username"
-                    name="username"
-                    variant="standard"
-                    onChange={this.handleUser}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    type="password"
-                    label="Password"
-                    name="password"
-                    variant="standard"
-                    onChange={this.handleUser}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    type="password"
-                    label="Re-enter password"
-                    variant="standard"
-                    onChange={this.handlePasswordAgain}
-                  />
-                </div>
-                <div style={{ marginTop: "15px" }}>
-                  {this.validateSubmit && (
-                    <Button
-                      variant="contained"
-                      onClick={async () => await createUser(this.user)}
-                      color="info"
-                    >
-                      Create User
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Box>
-          </Card>
-        </Grid>
+        <LoginBodyContainer>
+          <div>
+            <TextField
+              label="First Name"
+              name="firstName"
+              variant="standard"
+              onChange={this.handleUser}
+            />
+          </div>
+          <div>
+            <TextField
+              label="Last Name"
+              name="lastName"
+              variant="standard"
+              onChange={this.handleUser}
+            />
+          </div>
+          <div>
+            <TextField
+              label="Username"
+              name="username"
+              variant="standard"
+              onChange={this.handleUser}
+            />
+          </div>
+          <div>
+            <TextField
+              type="password"
+              label="Password"
+              name="password"
+              variant="standard"
+              onChange={this.handleUser}
+            />
+          </div>
+          <div>
+            <TextField
+              type="password"
+              label="Re-enter password"
+              variant="standard"
+              onChange={this.handlePasswordAgain}
+            />
+          </div>
+          <div style={{ marginTop: "15px" }}>
+            {this.validateSubmit && (
+              <Button
+                variant="contained"
+                onClick={async () => await createUser(this.user)}
+                color="info"
+              >
+                Create User
+              </Button>
+            )}
+          </div>
+        </LoginBodyContainer>
       </>
     );
   }

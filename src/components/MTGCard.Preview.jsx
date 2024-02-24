@@ -10,7 +10,7 @@ class MTGCard extends PureComponent {
     return (
       <div
         className="darker"
-        style={{ flexDirection: "row", paddingBottom: 15 }}
+        style={{ flexDirection: "row" }}
         onMouseEnter={() => {
           return <div>test</div>;
         }}

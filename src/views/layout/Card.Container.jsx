@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
 import MTGCard from "../../components/MTGCard.Preview";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -65,26 +65,38 @@ class CardContainer extends PureComponent {
           </AppBar>
         </Box>
 
-        <Box>
-          …
-          <div style={{}}>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              justifyContent: "center",
+              display: "flex",
+              flexWrap: "wrap",
+              padding: "5vh",
+            }}
+          >
             {cardsWithImages?.map((card) => {
               return (
-                <div style={{ display: "inline-flex", flexDirection: "row" }}>
+                <div style={{ padding: "2.5vh" }}>
                   <MTGCard card={card} />
                 </div>
               );
             })}
           </div>
-        </Box>
-        <Button onClick={async () => setPage(page - 1)}>
-          <ArrowBackIosIcon />
-        </Button>
-        <span style={{ display: "inline-flex" }}>{page}</span>
-
-        <Button onClick={() => setPage(page + 1)}>
-          <ArrowForwardIosIcon />
-        </Button>
+          <Button onClick={async () => setPage(page - 1)}>
+            <ArrowBackIosIcon />
+          </Button>
+          <span style={{ display: "inline-flex" }}>{page}</span>
+          <Button onClick={() => setPage(page + 1)}>
+            <ArrowForwardIosIcon />
+          </Button>
+        </Grid>
       </>
     );
   }
