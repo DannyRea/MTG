@@ -8,9 +8,9 @@ class LoginContainer extends PureComponent {
   }
   render() {
     return (
-      <>
+      <div style={{ alignItems: "center" }}>
         <LoginBody />
-      </>
+      </div>
     );
   }
 }

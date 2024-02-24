@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { inject, observer } from "mobx-react";
 import { makeObservable, observable, action } from "mobx";
+import LoginBodyContainer from "../../components/LoginBody.Container";
+import "../../App.css";
 //TODO: finish up handleUsername and handlePassword
 class LoginBody extends PureComponent {
   username = "";
@@ -20,6 +22,7 @@ class LoginBody extends PureComponent {
       username: observable,
       password: observable,
       handleUsername: action,
+
       handlePassword: action,
     });
   }
@@ -38,59 +41,39 @@ class LoginBody extends PureComponent {
     } = this.props;
     return (
       <>
-        <Grid
-          container
-          spacing={0}
-          style={{
-            minHeight: "100vh",
-            flexDirection: "column",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Card raised>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <CardContent sx={{ flex: "1 0 auto" }}>
-                <div>
-                  <TextField
-                    label="Username"
-                    variant="standard"
-                    onChange={this.handleUsername}
-                  />
-                </div>
-                <div>
-                  <TextField
-                    type="password"
-                    label="Password"
-                    variant="standard"
-                    onChange={this.handlePassword}
-                  />
-                </div>
-                <div style={{ marginTop: "15px" }}>
-                  <Button
-                    variant="contained"
-                    onClick={async () =>
-                      await loginUser(this.username, this.password)
-                    }
-                  >
-                    Log In
-                  </Button>
-                </div>
-                <div style={{ marginTop: "10px" }}>
-                  <Link
-                    component={"button"}
-                    onClick={async () =>
-                      await this.props.routerStore.goTo("CreateUser")
-                    }
-                  >
-                    Create user
-                  </Link>
-                </div>
-              </CardContent>
-            </Box>
-          </Card>
-        </Grid>
+        <LoginBodyContainer>
+          <h1>Login</h1>
+          <TextField
+            label="Username"
+            variant="standard"
+            onChange={this.handleUsername}
+            sx={{ padding: "5px" }}
+          />
+
+          <TextField
+            type="password"
+            label="Password"
+            variant="standard"
+            onChange={this.handlePassword}
+            sx={{ padding: "5px" }}
+          />
+          <Button
+            className="login-button"
+            variant="contained"
+            onClick={async () => await loginUser(this.username, this.password)}
+            sx={{ borderRadius: 5 }}
+          >
+            Log In
+          </Button>
+          <Link
+            component={"button"}
+            onClick={async () =>
+              await this.props.routerStore.goTo("CreateUser")
+            }
+          >
+            Create user
+          </Link>
+        </LoginBodyContainer>
       </>
     );
   }
