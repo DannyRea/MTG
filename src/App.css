@@ -7,6 +7,10 @@
   align-content: center;
   flex-wrap: wrap;
 }
+img {
+  width: 100%;
+  transition: width 2s ease-in-out;
+}
 
 .logo {
   height: 6em;
@@ -19,6 +23,13 @@
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
+}
+.text-on-image {
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  bottom: 15%;
+  color: rgba(255, 255, 255, 0.279);
 }
 
 @keyframes logo-spin {

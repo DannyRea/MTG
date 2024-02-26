@@ -7,6 +7,7 @@ export default class CardStore {
   newDeck = {};
   cards = [];
   sets = [];
+  currentDeckChanges = [];
   dialogOpen = false;
   constructor(rootStore) {
     this.rootStore = rootStore;
