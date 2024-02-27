@@ -7,7 +7,7 @@ export default class CardStore {
   newDeck = {};
   cards = [];
   sets = [];
-  currentDeckChanges = [];
+  currentDeck = [];
   dialogOpen = false;
   constructor(rootStore) {
     this.rootStore = rootStore;
@@ -28,6 +28,17 @@ export default class CardStore {
     runInAction(() => {
       this.dialogOpen = !this.dialogOpen;
     });
+  };
+  addToDeck = (card) => {
+    this.currentDeck.push(card);
+  };
+  removeFromDeck = (card) => {
+    const foundCardIndex = this.currentDeck
+      .slice()
+      .findIndex((deckCard) => deckCard.id === card.id);
+    if (foundCardIndex !== -1) {
+      this.currentDeck.splice(foundCardIndex, 1);
+    }
   };
 
   refresh = async () => {
