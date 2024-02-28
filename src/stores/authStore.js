@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import axios from "axios";
+import localforage from "localforage";
 export default class AuthStore {
   currentUser = {};
   users = [];
@@ -8,29 +9,24 @@ export default class AuthStore {
     makeAutoObservable(this, { rootStore: false });
   }
 
-  isSignedIn = () => {};
-
-  setCurrentUser = (user) => {
-    console.log("user", user);
-    document.cookie = "";
-    if (!document.cookie.length) {
-      document.cookie = `id=${user.id};username=${user.username};firstName=${user.firstName};lastName=${user.lastName}`;
+  setCurrentUser = async (data) => {
+    try {
+      await localforage.setItem("id", data.user.id);
+      await localforage.setItem("username", data.user.username);
+      await localforage.setItem("jwt", data.accessToken);
+      await localforage.setItem(
+        "tokenCreatedAt",
+        data.authentication.payload.iat
+      );
+      await localforage.setItem(
+        "tokenCreatedAt",
+        data.authentication.payload.exp
+      );
+      this.currentUser = data.user;
+    } catch (e) {
+      console.log("Error with setting user");
+      this.currentUser = {};
     }
-
-    const decodedCookie = decodeURIComponent(document.cookie);
-    console.log(document.cookie);
-    this.currentUser = decodedCookie.split(";").reduce((acc, cookie) => {
-      if (
-        cookie.includes("id") ||
-        cookie.includes("username") ||
-        cookie.includes("firstName") ||
-        cookie.includes("lastName")
-      ) {
-        const keyValPair = cookie.split("=");
-        acc[`${keyValPair[0]}`] = keyValPair[1];
-      }
-    }, {});
-    console.log("currentUser", this.currentUser);
   };
   //   {
   //     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJpYXQiOjE3MDc1MjQ4MzEsImV4cCI6MTcwNzYxMTIzMSwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsInN1YiI6IjE4IiwianRpIjoiZTRjOGExNmUtNDEzMS00ZGYxLWIzYzYtNzllNWRkNmJkOWNiIn0.axoj40kYvHtcJCgskGk0QSz7JD2ROJRSFZ9Jb4P0YLs",
@@ -59,12 +55,12 @@ export default class AuthStore {
           username: username,
           password: password,
         })
-        .then((res) => {
+        .then(async (res) => {
           this.rootStore.notificationStore.addNotification(
             "Success! Logging you in...",
             { variant: "success" }
           );
-          this.setCurrentUser(res.data.user);
+          await this.setCurrentUser(res.data);
           setTimeout(
             async () => await this.rootStore.routerStore.goTo("MTGCards"),
             3000
@@ -114,5 +110,18 @@ export default class AuthStore {
         );
       }
     }
+  };
+
+  isSignedIn = async () => {
+    console.log("here");
+    return (
+      (await localforage.keys()) &&
+      (await localforage.getItem("id")) &&
+      (await localforage.getItem("username")) &&
+      (await localforage.getItem("jwt")) &&
+      (await localforage.getItem("tokenCreatedAt")) &&
+      (await localforage.getItem("tokenExpireAt")) &&
+      (await localforage.getItem("tokenExpireAt")) < new Date().getTime()
+    );
   };
 }

@@ -8,6 +8,17 @@ const routes = [
   {
     name: "LoginPage",
     pattern: "/login",
+    beforeEnter: async (fromState, toState, routerStore) => {
+      const {
+        rootStore: {
+          authStore: { isSignedIn },
+        },
+      } = routerStore.options;
+      console.log(await isSignedIn());
+      if (await isSignedIn()) {
+        return await routerStore.goTo("MTGCards");
+      }
+    },
   },
 
   {
@@ -19,9 +30,14 @@ const routes = [
           routerStore: {
             routerState: { queryParams },
           },
+          authStore: { isSignedIn },
           cardStore: { refresh },
         },
       } = routerStore.options;
+
+      if (!(await isSignedIn())) {
+        return await routerStore.goTo("LoginPage");
+      }
     },
     onEnter: async (fromState, toState, routerStore) => {
       const {

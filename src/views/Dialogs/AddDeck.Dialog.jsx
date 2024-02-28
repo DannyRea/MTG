@@ -85,9 +85,7 @@ class AddDeckDialog extends PureComponent {
     return !!this.deckFormatValue.length;
   }
   get validateSubmit() {
-    return (
-      this.validateDeckName && this.validateDeckTypes && this.validateFormat
-    );
+    return this.validateDeckName && this.validateDeckTypes;
   }
   //TODO: Fix computed validating submit
   render() {
@@ -201,7 +199,7 @@ class AddDeckDialog extends PureComponent {
           variant="standard"
         >
           <Button
-            disabled={() => validateSubmit()}
+            // disabled={() => validateSubmit()}
             onClick={async () => {
               await createDeck()
                 .then(() => {

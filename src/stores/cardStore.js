@@ -94,7 +94,23 @@ export default class CardStore {
     );
   };
   createDeck = async () => {
-    await axios.post("http://localhost:3030/mtg/deck", this.newDeck);
+    console.log(this.rootStore.authStore.currentUser.id);
+    await axios
+      .post("http://localhost:3030/mtg/deck", {
+        userId: this.rootStore.authStore.currentUser.id,
+        ...this.newDeck,
+      })
+      .then(() => {
+        this.rootStore.notificationStore.addNotification(
+          `'${this.newDeck.deckName} deck created!'`,
+          { variant: "success" }
+        );
+      })
+      .catch((e) =>
+        this.rootStore.notificationStore.addNotification(
+          `Error creating deck: ${e.message ? e.message : e}`
+        )
+      );
   };
 
   get cardsWithImages() {

@@ -26,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         authStore={rootStore.authStore}
         cardStore={rootStore.cardStore}
         notificationStore={rootStore.notificationStore}
+        connectionStore={rootStore.connectionStore}
       >
         <RouterContext.Provider value={routerStore}>
           <App />
