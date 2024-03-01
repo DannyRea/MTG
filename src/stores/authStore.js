@@ -7,6 +7,7 @@ export default class AuthStore {
   constructor(rootStore) {
     this.rootStore = rootStore;
     makeAutoObservable(this, { rootStore: false });
+    this.setCurrentUser();
   }
 
   setCurrentUser = async (data) => {
@@ -123,5 +124,13 @@ export default class AuthStore {
       (await localforage.getItem("tokenExpireAt")) &&
       (await localforage.getItem("tokenExpireAt")) < new Date().getTime()
     );
+  };
+
+  setCurrentUser = async () => {
+    const userId = await localforage.getItem("id");
+    const username = await localforage.getItem("username");
+    if (!!userId && !!username)
+      this.currentUser = { userId: userId, username: username };
+    console.log("this.currentUser", this.currentUser);
   };
 }

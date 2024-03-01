@@ -5,9 +5,11 @@ export default class CardStore {
   page = 1;
   routeCard = {};
   newDeck = {};
+  selectedDeck = {};
   cards = [];
   sets = [];
   currentDeck = [];
+  userDbDecks = [];
   dialogOpen = false;
   constructor(rootStore) {
     this.rootStore = rootStore;
@@ -71,6 +73,31 @@ export default class CardStore {
     });
   };
 
+  resetDeck = () => {
+    this.currentDeck = [];
+  };
+
+  patchDeck = async () => {
+    try {
+      await axios
+        .patch(
+          `http://localhost:3030/mtg/card?deckId=${this.selectedDeck.deckId}`,
+          this.currentDeck.slice()
+        )
+        .then(
+          () =>
+            this.rootStore.notificationStore.addNotification(
+              "Changed saved to deck!"
+            ),
+          { variant: "success" }
+        );
+    } catch (e) {
+      this.rootStore.notificationStore.addNotification("Error saving to deck"),
+        { variant: "error" };
+    }
+    this.resetDeck();
+  };
+
   getCards = async () => {
     await fetch(
       `https://api.magicthegathering.io/v1/cards?page=${this.page}`
@@ -93,24 +120,48 @@ export default class CardStore {
       })
     );
   };
-  createDeck = async () => {
-    console.log(this.rootStore.authStore.currentUser.id);
-    await axios
-      .post("http://localhost:3030/mtg/deck", {
-        userId: this.rootStore.authStore.currentUser.id,
-        ...this.newDeck,
-      })
-      .then(() => {
-        this.rootStore.notificationStore.addNotification(
-          `'${this.newDeck.deckName} deck created!'`,
-          { variant: "success" }
-        );
-      })
-      .catch((e) =>
-        this.rootStore.notificationStore.addNotification(
-          `Error creating deck: ${e.message ? e.message : e}`
+  getUserDbDecks = async () => {
+    console.log(this.rootStore.authStore.currentUser.userId);
+    if (this.rootStore.authStore.currentUser?.userId) {
+      await axios
+        .get(
+          `http://localhost:3030/mtg/deck?userId=${this.rootStore.authStore.currentUser.userId}`
         )
+        .then(async (res) => {
+          console.log(res);
+          if (res?.data?.data?.length) {
+            this.userDbDecks = [...res.data.data];
+          }
+          console.log(this.userDbDecks);
+        });
+    }
+  };
+
+  setSelectedDeck = (event) => {
+    console.log(event.target.value);
+    this.selectedDeck = event.target.value;
+  };
+
+  createDeck = async () => {
+    console.log(this.rootStore.authStore.currentUser.userId);
+    console.log(this.newDeck);
+    try {
+      await axios
+        .post("http://localhost:3030/mtg/deck", {
+          userId: this.rootStore.authStore.currentUser.userId,
+          ...this.newDeck,
+        })
+        .then(() => {
+          this.rootStore.notificationStore.addNotification(
+            `'${this.newDeck.deckName} deck created!'`,
+            { variant: "success" }
+          );
+        });
+    } catch (e) {
+      this.rootStore.notificationStore.addNotification(
+        `Error creating deck: ${e.message ? e.message : e}`
       );
+    }
   };
 
   get cardsWithImages() {
@@ -121,5 +172,9 @@ export default class CardStore {
         if (card.imageUrl) return card;
       })
       .filter((x) => x);
+  }
+
+  get currentUserDecks() {
+    return this.userDbDecks.slice() || [];
   }
 }

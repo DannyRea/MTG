@@ -15,52 +15,113 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
+import ApplyChangesIcon from "@mui/icons-material/Check";
+import ClearChangesIcon from "@mui/icons-material/Close";
 
 class CardContainer extends PureComponent {
   render() {
     const {
-      cardStore: { cardsWithImages, page, setPage, setDialogOpen },
+      cardStore: {
+        cardsWithImages,
+        page,
+        setPage,
+        setDialogOpen,
+        currentUserDecks,
+        setSelectedDeck,
+        currentDeck,
+        patchDeck,
+        resetDeck,
+      },
       routerStore: { goTo, routes },
     } = this.props;
     console.log(routes);
     return (
       <>
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                size="large"
-                edge="start"
-                color="success"
-                aria-label="menu"
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
-
-              <Typography variant="h6" component="span" sx={{ flexGrow: 1 }}>
-                test
-              </Typography>
-              <span>
-                <FormControl>
-                  <InputLabel id="user-state-select">Deck</InputLabel>
-                  <Select
-                    labelId="user-state-select"
-                    sx={{ flexGrow: 1, minWidth: "20vh" }}
+        <Box
+          container
+          sx={{
+            flexGrow: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <AppBar
+            position="static"
+            sx={{
+              borderRadius: 15,
+              backgroundColor: "black",
+              justifyContent: "center",
+            }}
+          >
+            <Toolbar sx={{ justifyContent: "space-between" }}>
+              <Grid item xs={4}>
+                <IconButton
+                  size="large"
+                  edge="start"
+                  aria-label="menu"
+                  sx={{
+                    backgroundColor: "white",
+                    marginRight: "40px",
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid>
+                <span style={{ marginRight: "40px" }}>
+                  <FormControl
+                    sx={{
+                      backgroundColor: "white",
+                      borderRadius: 15,
+                    }}
                   >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
-                  </Select>
-                </FormControl>
-              </span>
-              <Button
-                color="inherit"
-                variant="outlined"
-                onClick={() => setDialogOpen()}
-              >
-                <AddToDeckIcon />
-              </Button>
+                    <InputLabel id="user-state-select">Deck</InputLabel>
+                    <Select
+                      labelId="user-state-select"
+                      onChange={setSelectedDeck}
+                      sx={{ flexGrow: 1, minWidth: "20vh", borderRadius: 15 }}
+                    >
+                      {currentUserDecks?.map((deck) => {
+                        return (
+                          <MenuItem value={deck}>{deck.deckName}</MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                </span>
+              </Grid>
+              <Grid item xs={4}>
+                {currentDeck?.length > 0 && (
+                  <>
+                    <Button
+                      color="success"
+                      variant="contained"
+                      onClick={() => patchDeck()}
+                      sx={{ marginRight: "10px", borderRadius: "50px" }}
+                    >
+                      <ApplyChangesIcon />
+                    </Button>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={() => resetDeck()}
+                      sx={{ marginRight: "10px", borderRadius: "50px" }}
+                    >
+                      <ClearChangesIcon />
+                    </Button>
+                  </>
+                )}
+                <Button
+                  color="info"
+                  variant="contained"
+                  onClick={() => setDialogOpen()}
+                  sx={{ borderRadius: "50px" }}
+                >
+                  <AddToDeckIcon />
+                </Button>
+              </Grid>
             </Toolbar>
           </AppBar>
         </Box>
@@ -101,4 +162,4 @@ class CardContainer extends PureComponent {
     );
   }
 }
-export default inject("cardStore", "routerStore")(CardContainer);
+export default inject("cardStore", "routerStore")(observer(CardContainer));

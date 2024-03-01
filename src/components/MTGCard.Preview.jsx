@@ -50,9 +50,6 @@ class MTGCard extends PureComponent {
                 height="384"
                 image={card.imageUrl}
                 alt={`${card.name}-image`}
-                onMouseEnter={() => {
-                  console.log("test");
-                }}
               />
             </CardContent>
             <span

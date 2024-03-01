@@ -1,7 +1,5 @@
 import { inject, observer } from "mobx-react";
 import { PureComponent } from "react";
-import Box from "@mui/material/Box";
-
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -9,20 +7,11 @@ import { DialogActions } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import { Button } from "@mui/material";
-import FormGroup from "@mui/material/FormGroup";
 import FormLabel from "@mui/material/FormLabel";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Radio, RadioGroup, TextField } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import {
-  action,
-  computed,
-  makeObservable,
-  observable,
-  runInAction,
-} from "mobx";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+import { action, computed, makeObservable, observable } from "mobx";
 
 class AddDeckDialog extends PureComponent {
   deckOptions = {};
@@ -44,6 +33,7 @@ class AddDeckDialog extends PureComponent {
       validateSubmit: computed,
     });
   }
+
   handleDeckFormatValue = (event) => {
     const {
       cardStore: { setNewDeck },
@@ -55,7 +45,6 @@ class AddDeckDialog extends PureComponent {
     const {
       cardStore: { setNewDeck },
     } = this.props;
-    console.log(type);
     const typeFoundIndex = this.deckTypes.slice().findIndex((t) => t === type);
     if (typeFoundIndex !== -1) {
       this.deckTypes.splice(typeFoundIndex, 1);
@@ -69,6 +58,7 @@ class AddDeckDialog extends PureComponent {
       cardStore: { setNewDeck },
     } = this.props;
     this.deckName = name;
+    setNewDeck("deckName", this.deckName);
   };
   resetDeck = () => {
     this.deckName = "";

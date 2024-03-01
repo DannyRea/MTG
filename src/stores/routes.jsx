@@ -30,14 +30,16 @@ const routes = [
           routerStore: {
             routerState: { queryParams },
           },
-          authStore: { isSignedIn },
-          cardStore: { refresh },
+          authStore: { isSignedIn, setCurrentUser },
+          cardStore: { refresh, getUserDbDecks },
         },
       } = routerStore.options;
 
       if (!(await isSignedIn())) {
         return await routerStore.goTo("LoginPage");
       }
+      await setCurrentUser();
+      await getUserDbDecks();
     },
     onEnter: async (fromState, toState, routerStore) => {
       const {
@@ -48,21 +50,7 @@ const routes = [
       await refresh();
     },
   },
-  {
-    name: "Card",
-    pattern: "/mtg/card/:id",
-    beforeEnter: (fromState, toState, routerStore) => {
-      const {
-        rootStore: {
-          cardStore: { setRouteCard },
-          routerStore: {},
-        },
-      } = routerStore.options;
-      const { params } = toState;
-      console.log(params.id);
-      setRouteCard(params.id);
-    },
-  },
+
   {
     name: "CreateUser",
     pattern: "/create-user",
